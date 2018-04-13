@@ -39,6 +39,8 @@ import json
 
 # Connect the LED to digital port D5
 BLUE_LED = 5
+GREEN_LED = 2
+RED_LED = 3
 
 grovepi.pinMode(BLUE_LED, "OUTPUT")
 time.sleep(1) # give the hardware time to initialize
@@ -59,13 +61,24 @@ def on_message(client, userdata, msg):
 	"""Called for each message received
 	:param client: The client object making the connection
 	:param userdata: Arbitrary context specified by the user program
-	:param ms: The message from the MQTT broker
+	:param msg: The message from the MQTT broker
 	:return: None
 	"""
 	print(msg.topic, msg.payload)
 	payload = json.loads(msg.payload)
 	# the legal values for analogWrite are 0-255
-	grovepi.analogWrite(BLUE_LED, payload['blue'])
+	try:
+		grovepi.analogWrite(BLUE_LED, payload['blue'])
+	except:
+		pass
+	try:
+		grovepi.analogWrite(GREEN_LED, payload['green'])
+	except:
+		pass
+	try:
+		grovepi.analogWrite(RED_LED, payload['red'])
+	except:
+		pass
 
 local_client = mqtt.Client()
 local_client.on_connect = on_connect
